@@ -19,6 +19,7 @@
 - [How a forecast is scored](#how-a-forecast-is-scored)
 - [Results of the paper](#results-of-the-paper)
 - [Results of a light run](#results-of-a-light-run)
+- [A check of the full protocol](#a-check-of-the-full-protocol)
 - [Files](#files)
 - [Checks done on this repository](#checks-done-on-this-repository)
 - [Citation and licence](#citation-and-licence)
@@ -117,6 +118,8 @@ Values fixed inside the files, the same in every mode:
 | `python/unet_bench.py` | 15 epochs, batch 32, learning rate 1e-3, seed 1 |
 | `python/lstm_bench.py` | one layer of 256 units, 15 epochs, batch 64, learning rate 1e-3, seed 1 |
 
+The ridge, the ELM, the U-Net and the LSTM read the 24 past hourly values of what they forecast, with no calendar or other input, and forecast the 24 lead times at once: one model, one output per lead time, no forecast fed back as an input.
+
 ---
 
 ## What each step fits
@@ -155,25 +158,25 @@ Python never computes a score. It returns predictions, and MATLAB scores them wi
 1. A cell is scored at a target hour only where its own solar elevation exceeds 5° (`hms_eval_mask`, `hms_solar`).
 2. Negative forecasts are set to 0 in every step. The bench and U-Net steps also set to 0 every forecast where the sun is at or below the horizon. BLEND, the patch sweep and the LSTM do not, and their files say why: no such cell is ever scored, so the numbers do not change.
 3. Errors are pooled over every scored cell of every map (`hms_score`).
-4. `hms_metrics_h` computes, at 1, 2, 3, 6, 12 and 24 hours: nRMSE and nMAE divided by the mean above, nMBE, the NICE family against simple persistence, and the gamma index with its pass rate.
+4. `hms_metrics_h` computes, at 1, 2, 3, 6, 12 and 24 hours: nRMSE and nMAE divided by the mean above, nMBE, the NICE family against simple persistence, and the gamma index with its pass rate. The tables give NICE^Σ, the mean gamma and the gamma pass rate as the mean of these six lead times, the same way for every model.
 
 ---
 
 ## Results of the paper
 
-From `paper_results\tables\ladder.tex` and `routes.tex`, nRMSE pooled over 1 to 24 hours and at two lead times. Parameters are the stored values, in thousands (k) or millions (M).
+From `paper_results\tables\ladder.tex` and `routes.tex`, nRMSE pooled over 1 to 24 hours and at two lead times. Parameters are the stored values, in thousands (k) or millions (M); GPR is the gamma pass rate, mean of the six lead times.
 
-| model | nRMSE | 1 h | 24 h | parameters | GPR 3 h |
+| model | nRMSE | 1 h | 24 h | parameters | GPR |
 |---|---:|---:|---:|---:|---:|
-| ELM-pixel | **0.308** | 0.156 | 0.325 | 100.4k | 61.2 % |
-| LSTM-field | 0.326 | 0.182 | 0.343 | 5.5M | 51.2 % |
-| U-Net-field (8 channels) | 0.343 | 0.205 | 0.346 | 31.2k | 43.5 % |
+| ELM-pixel | **0.308** | 0.156 | 0.325 | 100.4k | 58.6 % |
+| LSTM-field | 0.326 | 0.182 | 0.343 | 5.5M | 54.2 % |
+| U-Net-field (8 channels) | 0.343 | 0.205 | 0.346 | 31.2k | 42.7 % |
 | AE-ELM-field (p = 392), best compression | 0.348 | 0.181 | | 39.4M | |
-| Ridge-pixel | 0.354 | 0.175 | 0.353 | 600 | 51.2 % |
+| Ridge-pixel | 0.354 | 0.175 | 0.353 | 600 | 57.1 % |
 | ELM-field | 0.355 | 0.174 | 0.376 | 100.7M | 48.6 % |
-| BLEND | 0.376 | 0.226 | 0.396 | 576 | 44.6 % |
+| BLEND | 0.376 | 0.226 | 0.396 | 576 | 50.6 % |
 | Pers-24h | 0.396 | 0.396 | 0.396 | 0 | 61.2 % |
-| Pers | 0.998 | 0.320 | 0.396 | 0 | 7.6 % |
+| Pers | 0.998 | 0.320 | 0.396 | 0 | 19.8 % |
 
 The per-cell model stores a thousandth of the whole-field model and has the lowest error. No compression method reaches it.
 
@@ -209,13 +212,27 @@ nRMSE pooled over 1 to 24 hours, from the tables of that run, next to the paper'
 
 The models the paper fits once give its values. The whole-field and compressed ELM routes differ by at most 0.004: the paper keeps the median of 50 random hidden layers, and a light run draws one.
 
-The paper's protocol on one compression method is running as a last check:
+---
+
+## A check of the full protocol
+
+The paper's protocol, the median of 50 random hidden layers, was run on the same laptop for the bench step and one compression method:
 
 ```bash
 powershell -ExecutionPolicy Bypass -File .\run_all.ps1 -Mode light -Draws 50 -Only bench -Codes dct -Payload 196
 ```
 
-This section will be updated with its result.
+It ran in 3.7 hours without an error. Its tables match the paper's in every column except fit time, which depends on the machine: the pooled error, the six lead times, NICE^Σ, the mean gamma and the pass rate.
+
+| model | full protocol | paper |
+|---|---:|---:|
+| ELM-pixel | 0.308 | 0.308 |
+| Ridge-pixel | 0.354 | 0.354 |
+| ELM-field | 0.355 | 0.355 |
+| ELM-field (linear) | 0.368 | 0.368 |
+| DCT-ELM-field (p = 196) | 0.399 | 0.399 |
+| Pers-24h | 0.396 | 0.396 |
+| Pers | 0.998 | 0.998 |
 
 ---
 
@@ -263,7 +280,7 @@ This section will be updated with its result.
 - **Same data.** `Basic\GHI_HC3.mat` equals hours 1 to 17 520 of the original archive, missing values included (MATLAB `isequaln`).
 - **Same field.** `hms_build_field` on this repository and `rt_build_field` on the original project return identical fields and masks for days 1, 2, 365, 366, 729 and 730.
 - **Same tables.** `run_all.ps1` in `tables` mode writes `ladder.tex` and `routes.tex` identical to the paper's, apart from the generator's name in their first comment line.
-- **Same numbers.** A light run gives the paper's errors for every model the paper fits once (table above).
+- **Same numbers.** A light run gives the paper's errors for every model the paper fits once, and the full protocol gives the paper's tables for the models it runs (tables above).
 - **One fix.** The light run showed a bug in the table generator. A new archive stores its normaliser inside its metrics block only, and the generator fell back to an old constant: every lead-time column of a new run came out 0.655 times too small, while the pooled column was right. The generator now reads the metrics block first, in the project and here; the paper's tables come out unchanged.
 
 ---
