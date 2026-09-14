@@ -32,7 +32,7 @@ param(
   [string[]] $Codes    = @('radon', 'dct', 'wavelet', 'pca', 'randproj', 'subsample', 'autoencoder'),
   [string[]] $UnetBase = @('8'),             # U-Net widths [8, 16, 24]
   [string[]] $LstmReps = @('field', 'dct'),  # what the LSTM reads [field, radon, dct, pca]
-  [string[]] $Patch    = @('1', '3'),        # patch sides of the neighbourhood sweep [1, 3, 5, 7]
+  [string[]] $Patch    = @('1', '3'),        # patch sides of the neighborhood sweep [1, 3, 5, 7]
 
   [string[]] $Only     = @('all')            # any of: all, bench, blend, patch, unet, lstm
 )

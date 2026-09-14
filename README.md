@@ -22,7 +22,7 @@
 - [A check of the full protocol](#a-check-of-the-full-protocol)
 - [Files](#files)
 - [Checks done on this repository](#checks-done-on-this-repository)
-- [Citation and licence](#citation-and-licence)
+- [Citation and license](#citation-and-license)
 
 ---
 
@@ -100,7 +100,7 @@ Every value is set by hand. Nothing is tuned by the script.
 | `-Codes` | radon, dct, wavelet, pca, randproj, subsample, autoencoder | same | the compression methods feeding the ELM |
 | `-UnetBase` | 8 | 8, 16, 24 | channels of the first U-Net level |
 | `-LstmReps` | field, dct | field, radon, dct, pca | what the LSTM reads |
-| `-Patch` | 1, 3 | 1, 3, 5, 7 | patch sides of the neighbourhood sweep |
+| `-Patch` | 1, 3 | 1, 3, 5, 7 | patch sides of the neighborhood sweep |
 | `-Only` | all | all | any of `bench`, `blend`, `patch`, `unet`, `lstm` |
 | `-Matlab` | `matlab` | | the MATLAB executable |
 | `-Python` | `python` | | the Python interpreter |
@@ -144,7 +144,7 @@ Python never computes a score. It returns predictions, and MATLAB scores them wi
 - `GHI_HC3.mat`: HelioClim-3 global horizontal irradiance on 1148 points over Corsica, one cell per hour, the first 17 520 hours (2005 and 2006) of the author's eight-year archive;
 - `geopoint.mat`: latitude and longitude of the 1148 points.
 
-`hms_build_field` interpolates each hour onto a 32 × 32 grid (natural neighbour, no extrapolation). 722 cells lie inside the convex hull of the points; only they are scored.
+`hms_build_field` interpolates each hour onto a 32 × 32 grid (natural neighbor, no extrapolation). 722 cells lie inside the convex hull of the points; only they are scored.
 
 `results\` starts with two frozen inputs:
 
@@ -285,8 +285,8 @@ It ran in 3.7 hours without an error. Its tables match the paper's in every colu
 
 ---
 
-## Citation and licence
+## Citation and license
 
-See [CITATION.cff](CITATION.cff). The code is under the MIT licence ([LICENSE](LICENSE)). HelioClim-3 data are distributed by the SoDa service under its own terms of use; check them before any use of `Basic\GHI_HC3.mat` beyond running this benchmark.
+See [CITATION.cff](CITATION.cff). The code is under the MIT license ([LICENSE](LICENSE)). HelioClim-3 data are distributed by the SoDa service under its own terms of use; check them before any use of `Basic\GHI_HC3.mat` beyond running this benchmark.
 
 **Keywords:** solar irradiance forecasting, satellite irradiance, HelioClim-3, GHI, spatio-temporal forecasting, extreme learning machine, U-Net, LSTM, Radon transform, DCT, wavelet, PCA, random projection, autoencoder, compression, number of parameters, frugal machine learning, MATLAB, benchmark, Corsica.
