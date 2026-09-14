@@ -119,14 +119,14 @@ end
 % Voyant (2026) states the three tolerances as absolute quantities -- a
 % distance, a duration and an irradiance -- and gives ranges rather than a
 % single default: thirty to sixty W/m2 for nowcasting, eighty to a hundred and
-% twenty for medium-term forecasts. Sixty is taken here, the top of the
+% twenty for medium-term forecasts. Fifty is taken here, within the
 % nowcasting band, and it is stated rather than hidden because it is the one
 % free number in the criterion.
 %
 % AN EARLIER VERSION OF THIS FILE MADE IT RELATIVE, ten per cent of the
 % observation at each cell, and that is a different criterion. It is far
 % stricter where the criterion is most often evaluated: the median scored cell
-% reads 283 W/m2, so ten per cent is 28 W/m2 against the sixty prescribed, and
+% reads 283 W/m2, so ten per cent is 28 W/m2 against the fifty prescribed, and
 % at dawn a cell reading 62 W/m2 was being held to six. The reported pass rates
 % were consequently about half what the framework produces, and the shortfall
 % looked like a property of the forecasts rather than of the tolerance.
@@ -235,7 +235,8 @@ for dy = -ry:ry
             % y_r = 0 : the zero-tolerance limit. Only an exactly zero
             % prediction passes; anything else is infinitely far. Deliberately
             % strict, and stated as such in the protocol.
-            qI(~pos) = (Ph(~pos) ~= 0) * inf;
+            qI(~pos) = inf;
+            qI(~pos & Ph == 0) = 0;
             g   = ds2 + dt2 + qI;
             g(~isfinite(Ph) | ~Ok) = inf;   % no usable candidate here
             gam2 = min(gam2, g);

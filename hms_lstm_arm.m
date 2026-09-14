@@ -64,26 +64,29 @@ fprintf('fields built in %.0f s, island %d of %d cells\n', toc(t0), nnz(msk), d)
 [Lon, Lat] = meshgrid(info.lon_grid, info.lat_grid);
 cal = struct('resolved', true, 'days_in_year', 365, ...
              'source', sprintf('HelioClim-3, origin %s', cfg.absolute_start_date));
-em = @(dd) reshape(hms_eval_mask(Lat, Lon, epoch_of(dd, cfg), cal, ...
-                                struct('eval_deg', ELEV)), n*n, []);
-day_te = em(dte);
+[K5te, NTte] = hms_eval_mask(Lat, Lon, epoch_of(dte, cfg), cal, ...
+                                struct('eval_deg', ELEV));
+day_te = reshape(K5te, n*n, []);
+sun_te = ~reshape(NTte, n*n, []);
 
 otr = hms_codex_origins([1 size(Vtr,2)], max(L,Td), H);
 ote = hms_codex_origins([1 size(Vte,2)], max(L,Td), H);
 hms_resid('origins', ote);   % for the paired test; no-op when capture is off
 Yte = tgt(Vte, ote, H);
 Kte = flg(day_te, ote, H, d) & repmat(msk, H, 1).';
+NIGHT = ~flg(sun_te, ote, H, d);
 SC = hms_scale_ref();  mu = SC.mu;   % nRMSE divides by the MEAN of the
                                      % scored observations, not by their
                                      % spread; see HMS_SCALE_REF.
 
 % THE SIX METRICS, SCORED BY THE SAME FUNCTION AS EVERY OTHER ARM. NICE needs
 % simple persistence as its denominator, computed here on this arm's own test
-% origins rather than borrowed from another campaign. Night forcing is not
-% applied: Kte already excludes every cell below the elevation threshold, so a
-% night cell is never scored and forcing it would change no number.
+% origins rather than borrowed from another campaign. The same night forcing
+% and clipping as every other arm are applied before the reference is scored.
+% Night cells lie outside Kte, so the operation changes no reported number.
 HSU = hms_horizons();
-Pp  = max(repmat(Vte(:, ote).', 1, H), 0);
+Pp  = repmat(Vte(:, ote).', 1, H);
+Pp(NIGHT) = 0;  Pp = max(Pp, 0);
 [~, LREF] = hms_metrics_h(@(ih) slice_h(Pp, Yte, Kte, HSU(ih), d, n), mu, ...
     struct('horizons', HSU, 'res', 3.4, 'dt', 60, 'isref', true));
 clear Pp
@@ -141,7 +144,7 @@ for ir = 1:numel(reps)
                 P = decodeH(Pz, dec, size(Ztr,1), H, d);
             end
 
-            Pc = max(P, 0);
+            P(NIGHT) = 0;  Pc = max(P, 0);
             [MET, ~, tmet] = hms_metrics_h( ...
                 @(ih) slice_h(Pc, Yte, Kte, HSU(ih), d, n), mu, ...
                 struct('horizons', HSU, 'res', 3.4, 'dt', 60, 'niceref', LREF));

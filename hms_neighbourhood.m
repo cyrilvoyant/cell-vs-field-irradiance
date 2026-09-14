@@ -77,8 +77,10 @@ msk = mean(Mtr,3) > 0.5;  msk = msk(:);
 [Lon, Lat] = meshgrid(info.lon_grid, info.lat_grid);
 cal = struct('resolved', true, 'days_in_year', 365, ...
              'source', sprintf('HelioClim-3, origin %s', cfg.absolute_start_date));
-day_te = reshape(hms_eval_mask(Lat, Lon, hms_epoch(dte, cfg), cal, ...
-                              struct('eval_deg', ELEV)), d, []);
+[K5te, NTte] = hms_eval_mask(Lat, Lon, hms_epoch(dte, cfg), cal, ...
+                              struct('eval_deg', ELEV));
+day_te = reshape(K5te, d, []);
+sun_te = ~reshape(NTte, d, []);
 Kte_c = day_te & msk;
 
 otr = hms_codex_origins([1 size(Vtr,2)], max(L,Td), H);
@@ -107,6 +109,11 @@ end
 Pp = zeros(d, numel(ote), numel(HS), 'single');
 for q = 1:d
     Pp(q,:,:) = repmat(single(max(Vte(q, ote), 0)).', 1, 1, numel(HS));
+end
+for ih = 1:numel(HS)
+    Ph = Pp(:,:,ih);
+    Ph(~sun_te(:, ote + HS(ih))) = 0;
+    Pp(:,:,ih) = Ph;
 end
 ctx0 = struct('Vte', Vte, 'Kte', Kte_c, 'ote', ote, 'n', n);
 [~, LREF] = hms_metrics_h(@(ih) slice_h(Pp, ctx0, HS(ih), ih), mu, ...
@@ -138,12 +145,15 @@ for k = ks
     se = 0;  nk = 0;  seh = zeros(1,H);  nkh = zeros(1,H);
     for q = ip
         A = patch_lags(Vte, ote, NB(q,:), L);
-        Q = max(hms_elm('predict', M, A), 0);
+        Q = hms_elm('predict', M, A);
         Y = zeros(numel(ote), H);  Kq = false(numel(ote), H);
+        Nq = false(numel(ote), H);
         for h = 1:H
             Y(:,h)  = Vte(q, ote+h).';
             Kq(:,h) = Kte_c(q, ote+h).';
+            Nq(:,h) = ~sun_te(q, ote+h).';
         end
+        Q(Nq) = 0;  Q = max(Q, 0);
         D = (Q - Y).^2 .* Kq;
         se = se + sum(D(:));   nk = nk + sum(Kq(:));
         seh = seh + sum(D,1);  nkh = nkh + sum(Kq,1);

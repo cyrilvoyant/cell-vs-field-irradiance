@@ -156,7 +156,7 @@ Python never computes a score. It returns predictions, and MATLAB scores them wi
 ## How a forecast is scored
 
 1. A cell is scored at a target hour only where its own solar elevation exceeds 5° (`hms_eval_mask`, `hms_solar`).
-2. Negative forecasts are set to 0 in every step. The bench and U-Net steps also set to 0 every forecast where the sun is at or below the horizon. BLEND, the patch sweep and the LSTM do not, and their files say why: no such cell is ever scored, so the numbers do not change.
+2. Negative forecasts are set to 0 in every step. Every forecast is also set to 0 where the local sun is below the horizon. Those cells lie outside the elevation-above-5° score mask, so the physical forcing changes no reported score.
 3. Errors are pooled over every scored cell of every map (`hms_score`).
 4. `hms_metrics_h` computes, at 1, 2, 3, 6, 12 and 24 hours: nRMSE and nMAE divided by the mean above, nMBE, the NICE family against simple persistence, and the gamma index with its pass rate. The tables give NICE^Σ, the mean gamma and the gamma pass rate as the mean of these six lead times, the same way for every model.
 
@@ -262,6 +262,7 @@ It ran in 3.7 hours without an error. Its tables match the paper's in every colu
 | `hms_horizons.m` | The horizons this paper reports, in one place. |
 | `hms_metrics_h.m` | The six metrics, at every reported horizon, computed in one place. |
 | `hms_gamma.m` | Spatio-temporal gamma index for gridded forecasts. |
+| `hms_gamma_check.m` | Closed-form checks of the gamma implementation. |
 | `hms_score.m` | The one error convention of this study: pooled over cells and time. |
 | `hms_scale_ref.m` | The normalising constant of this study, computed once and stated. |
 | `hms_push_row.m` | Append one result to a campaign, whatever order its fields came in. |

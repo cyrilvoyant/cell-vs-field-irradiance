@@ -55,7 +55,11 @@ cal = struct('resolved', true, 'days_in_year', 365, ...
              'source', sprintf('HelioClim-3, origin %s', cfg.absolute_start_date));
 em = @(dd) reshape(hms_eval_mask(Lat, Lon, epoch_of(dd, cfg), cal, ...
                                 struct('eval_deg', ELEV)), n*n, []);
-day_tr = em(dtr);  day_te = em(dte);
+day_tr = em(dtr);
+[K5te, NTte] = hms_eval_mask(Lat, Lon, epoch_of(dte, cfg), cal, ...
+                                struct('eval_deg', ELEV));
+day_te = reshape(K5te, n*n, []);
+sun_te = ~reshape(NTte, n*n, []);
 
 % THE SAME ORIGINS AS EVERY OTHER ARM. BLEND reads no lag block, so it would
 % tolerate earlier origins than the fitted arms; using its own would make its
@@ -65,13 +69,15 @@ ote = hms_codex_origins([1 size(Vte,2)], max(L, Td), H);
 hms_resid('origins', ote);        % for the paired test; no-op when capture is off
 Yte = tgt(Vte, ote, H);
 Kte = flg(day_te, ote, H, d) & repmat(msk, H, 1).';
+NIGHT = ~flg(sun_te, ote, H, d);
 SC = hms_scale_ref();  mu = SC.mu;
 fprintf('origins  test %d | nRMSE divides by the mean, mu = %.4f\n', ...
         numel(ote), mu);
 
 % ---- the NICE denominator, this arm's own simple persistence
 HSU = hms_horizons();
-Pp  = max(repmat(Vte(:, ote).', 1, H), 0);
+Pp  = repmat(Vte(:, ote).', 1, H);
+Pp(NIGHT) = 0;  Pp = max(Pp, 0);
 [~, LREF] = hms_metrics_h(@(ih) slice_h(Pp, Yte, Kte, HSU(ih), d, n), mu, ...
     struct('horizons', HSU, 'res', 3.4, 'dt', DT_MIN, 'isref', true));
 clear Pp
@@ -83,10 +89,10 @@ Ktr = day_tr & repmat(msk, 1, size(Vtr, 2));
 assert(Tdo == Td, 'hms_blend_arm:period', ...
     'The operator derived a period of %d steps where this archive has %d.', ...
     Tdo, Td);
-% THE SAME REPAIR EVERY ARM GETS. Negative predictions are clipped at zero.
-% Night forcing is not applied: Kte already excludes every cell below the
-% elevation threshold, so a night cell is never scored.
-Pb = max(Pb, 0);
+% THE SAME REPAIRS EVERY ARM GETS. Night predictions are set to zero and
+% negative predictions are clipped. The night cells are outside Kte, so this
+% enforces the physical output rule without changing a reported score.
+Pb(NIGHT) = 0;  Pb = max(Pb, 0);
 secs = toc(tb);
 
 [MET, ~, tmet] = hms_metrics_h(@(ih) slice_h(Pb, Yte, Kte, HSU(ih), d, n), mu, ...
