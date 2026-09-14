@@ -1,0 +1,21 @@
+# cell-vs-field-irradiance
+
+> The MATLAB and Python files of the paper "How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?" (Cyril Voyant, Mines Paris - PSL), with two years of hourly HelioClim-3 irradiance over Corsica and one PowerShell script that runs them.
+
+The question: when forecasting a satellite irradiance field 1 to 24 hours ahead, does reading the neighbouring cells, or compressing the field first, repay the number of parameters it costs? One extreme learning machine is held fixed while its input changes: one cell, a k x k patch, the whole 32 x 32 field, or the field through a compression method (Radon transform, discrete cosine transform, wavelet, principal components, random projection, block mean, autoencoder). A U-Net, an LSTM, a linear ridge, persistence, cyclic persistence and BLEND are the references. MATLAB scores every model; Python only trains the U-Net and the LSTM.
+
+Results of the paper: the per-cell ELM stores 100 400 values and reaches nRMSE 0.308 pooled over 1-24 h; the LSTM on the field reaches 0.326, the best compression method 0.348, the whole-field ELM 0.355 for a thousand times as many parameters. No compression method reaches the per-cell model.
+
+Running it: `run_all.ps1` rebuilds the paper's tables from its archives in `tables` mode, runs every model once with one random draw per ELM in `light` mode, and runs the paper's campaign in `full` mode. A light run on a laptop reproduces the paper's pooled errors: 0.308 for the per-cell ELM, 0.343 for the U-Net, 0.354 for the ridge. The MATLAB files are the paper's own, renamed from rt_ to hms_ and otherwise unchanged.
+
+## Files
+
+- [README.md](README.md): requirements, the three modes, every parameter, how scoring works, the paper's results and a light run's results.
+- [run_all.ps1](run_all.ps1): the PowerShell entry point.
+- [hms_forecast_bench.m](hms_forecast_bench.m): persistence, ridge, ELM per cell, ELM on the field, ELM on each compression method.
+- [hms_latent.m](hms_latent.m): the seven compression methods.
+- [hms_metrics_h.m](hms_metrics_h.m): nRMSE, nMAE, nMBE, NICE and the gamma pass rate by lead time.
+- [python/unet_bench.py](python/unet_bench.py), [python/lstm_bench.py](python/lstm_bench.py): the two trained networks.
+- [Basic/README.md](Basic/README.md): the HelioClim-3 extract.
+- [LICENSE](LICENSE): MIT, for the code.
+- [CITATION.cff](CITATION.cff): how to cite.

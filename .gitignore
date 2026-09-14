@@ -1,0 +1,7 @@
+# what a run writes; the two frozen inputs stay tracked
+results/*
+!results/hyper_frozen.mat
+!results/scale_ref.mat
+results_light_*/
+paper_results/tables/
+__pycache__/
