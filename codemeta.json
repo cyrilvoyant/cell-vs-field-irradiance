@@ -1,0 +1,58 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "name": "cell-vs-field-irradiance: the MATLAB and Python benchmark of per-cell, spatial and compressed forecasters of satellite solar irradiance",
+  "description": "How much space is enough for short-term satellite irradiance forecasting? Per-cell, patch, whole-field and compressed forecasters (ELM, U-Net, LSTM) on HelioClim-3 over Corsica, in MATLAB and Python.",
+  "codeRepository": "https://github.com/cyrilvoyant/cell-vs-field-irradiance",
+  "url": "https://cyrilvoyant.github.io/methods/satellite-irradiance-space.html",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Cyril",
+      "familyName": "Voyant",
+      "@id": "https://orcid.org/0000-0003-0242-7377",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "O.I.E. Centre Observation, Impacts, Energy, Mines Paris - PSL"
+      }
+    }
+  ],
+  "license": "https://spdx.org/licenses/MIT",
+  "programmingLanguage": [
+    "MATLAB",
+    "Python"
+  ],
+  "keywords": [
+    "solar irradiance forecasting",
+    "satellite irradiance",
+    "HelioClim-3",
+    "spatio-temporal forecasting",
+    "extreme learning machine",
+    "Radon transform",
+    "compression",
+    "storage cost"
+  ],
+  "citation": {
+    "@type": "CreativeWork",
+    "name": "How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?",
+    "author": [
+      {
+        "@type": "Person",
+        "givenName": "Cyril",
+        "familyName": "Voyant",
+        "@id": "https://orcid.org/0000-0003-0242-7377"
+      },
+      {
+        "@type": "Person",
+        "name": "Andreas Kazantzidis"
+      },
+      {
+        "@type": "Person",
+        "name": "Jan Kleissl"
+      }
+    ],
+    "creativeWorkStatus": "Manuscript in preparation"
+  },
+  "readme": "https://github.com/cyrilvoyant/cell-vs-field-irradiance/blob/main/README.md",
+  "issueTracker": "https://github.com/cyrilvoyant/cell-vs-field-irradiance/issues"
+}
