@@ -1,5 +1,7 @@
 # cell-vs-field-irradiance
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23562557.svg)](https://doi.org/10.5281/zenodo.23562557) (all versions; v0.1.0: [10.5281/zenodo.23562558](https://doi.org/10.5281/zenodo.23562558))
+
 **How much space is enough for short-term satellite irradiance forecasting?** This repository runs the benchmark of the paper of that name on two years of hourly HelioClim-3 irradiance over Corsica. One forecaster is held fixed while its input changes: a single cell, a small patch, the whole field, or the field compressed by one of seven methods. Every route is scored on the same cells, and the number of parameters each one stores is counted next to its error.
 
 **These are the paper's own files.** MATLAB fits and scores every model, Python trains the U-Net and the LSTM, and one PowerShell script runs the lot. Nothing was rewritten: the MATLAB files were renamed from `rt_` to `hms_` and nothing else changed (see [Checks](#checks-done-on-this-repository)).

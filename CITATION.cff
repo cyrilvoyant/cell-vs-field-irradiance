@@ -4,6 +4,14 @@ title: "cell-vs-field-irradiance: the MATLAB and Python benchmark of per-cell, s
 version: 0.1.0
 license: MIT
 repository-code: "https://github.com/cyrilvoyant/cell-vs-field-irradiance"
+doi: "10.5281/zenodo.23562557"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23562557"
+    description: "Concept DOI (all versions, Zenodo)"
+  - type: doi
+    value: "10.5281/zenodo.23562558"
+    description: "Version DOI of v0.1.0 (Zenodo)"
 authors:
   - family-names: Voyant
     given-names: Cyril
