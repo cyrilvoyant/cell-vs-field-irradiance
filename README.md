@@ -6,7 +6,11 @@
 
 **These are the paper's own files.** MATLAB fits and scores every model, Python trains the U-Net and the LSTM, and one PowerShell script runs the lot. Nothing was rewritten: the MATLAB files were renamed from `rt_` to `hms_` and nothing else changed (see [Checks](#checks-done-on-this-repository)).
 
-> C. Voyant, *How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?*, manuscript in preparation.
+> C. Voyant, A. Kazantzidis and J. Kleissl, *How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?*, manuscript in preparation.
+
+Scientific use contract: [llm.md](llm.md), [documentation descriptor](websemantic.json), [Turtle](ontology/cell-field.ttl) and [JSON-LD](ontology/cell-field.jsonld). These document this distributed HelioClim-3 benchmark, not every experiment in the evolving manuscript or a deployed WebSemantic adapter.
+
+**Version correspondence (23 October 2026):** table reconstruction from the public archives succeeds. The current working manuscript has since revised some labels and LSTM-PCA storage counts in its main comparison table. The compression-route table still matches after excluding the generator comment. Statements below about matching the paper refer to the archived protocol/version at release time, not every revision of the current manuscript. Reconciliation of the updated parameter accounting remains open; the original archives are preserved.
 
 ---
 

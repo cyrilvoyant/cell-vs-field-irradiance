@@ -1,0 +1,127 @@
+[
+  {
+    "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#manuscript",
+    "@type": [
+      "https://schema.org/CreativeWork"
+    ],
+    "https://schema.org/author": [
+      {
+        "@id": "https://orcid.org/0000-0003-0242-7377"
+      },
+      {
+        "@id": "https://orcid.org/0009-0005-6612-4991"
+      },
+      {
+        "@id": "https://orcid.org/0000-0003-4364-0211"
+      }
+    ],
+    "https://schema.org/creativeWorkStatus": [
+      {
+        "@value": "Manuscript in preparation"
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#tables",
+    "@type": [
+      "https://schema.org/CreativeWork"
+    ],
+    "https://schema.org/description": [
+      {
+        "@value": "Reconstruction does not retrain forecasting models."
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Tables reconstructed from archived model results"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#ghi",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Hourly global horizontal irradiance"
+      }
+    ],
+    "https://schema.org/unitCode": [
+      {
+        "@id": "http://qudt.org/vocab/unit/W-PER-M2"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#software",
+    "@type": [
+      "https://schema.org/SoftwareSourceCode"
+    ],
+    "https://github.com/cyrilvoyant/cell-vs-field-irradiance#input": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#ghi"
+      }
+    ],
+    "https://github.com/cyrilvoyant/cell-vs-field-irradiance#output": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#forecast"
+      },
+      {
+        "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#tables"
+      }
+    ],
+    "https://schema.org/citation": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#manuscript"
+      }
+    ],
+    "https://schema.org/codeRepository": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance"
+      }
+    ],
+    "https://schema.org/identifier": [
+      {
+        "@id": "https://doi.org/10.5281/zenodo.23562557"
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Cell versus field irradiance benchmark"
+      }
+    ],
+    "https://schema.org/programmingLanguage": [
+      {
+        "@value": "MATLAB"
+      },
+      {
+        "@value": "Python"
+      },
+      {
+        "@value": "PowerShell"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cell-vs-field-irradiance#forecast",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Direct multi-horizon irradiance prediction"
+      }
+    ],
+    "https://schema.org/unitCode": [
+      {
+        "@id": "http://qudt.org/vocab/unit/W-PER-M2"
+      }
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+{
+ "schema_version":"cell-field-documentation-contract-1",
+ "integration_status":"documentation_only_not_registered_with_websemantic",
+ "software":{"repository":"https://github.com/cyrilvoyant/cell-vs-field-irradiance","source_commit":"5e13a7577247e8f96f7410edc61be3ef2b97be86","entry_point":"run_all.ps1","runtime":["PowerShell","MATLAB","Python for selected training steps"],"doi":"10.5281/zenodo.23562557"},
+ "scope":"Distributed hourly HelioClim-3 Corsica benchmark; not all experiments of the evolving manuscript",
+ "inputs":{
+  "Mode":{"type":"string","required":false,"default":"tables","enum":["tables","light","full"]},
+  "Matlab":{"type":"executable_path_or_command","required":true},
+  "Python":{"type":"executable_path_or_command","required_for":["unet","lstm"]},
+  "archive_results":{"path":"paper_results/results","required_for":"tables"},
+  "ghi":{"path":"Basic/GHI_HC3.mat","required_for":"training","unit":"http://qudt.org/vocab/unit/W-PER-M2"},
+  "coordinates":{"path":"Basic/geopoint.mat","required_for":"training","unit":"degrees"},
+  "frozen_parameters":{"path":"results/hyper_frozen.mat","required_for":"training"},
+  "normalization":{"path":"results/scale_ref.mat","meaning":"scored test-set mean for reporting; not a fitting feature"}
+ },
+ "context_required":["dataset license","time averaging convention","UTC calendar provenance","training/test split","model settings","physical horizon","evaluation mask","archive version"],
+ "scientific_constraints":["24 hourly history values and 24 direct lead times in the distributed benchmark","No histories or targets cross split boundaries","Score per-cell solar elevation >5 degrees","Night forcing below0 degrees is outside scoring mask","NICE denominator is simple persistence","Do not equate table reconstruction with retraining"],
+ "outputs":{"tables":{"files":["ladder.tex","routes.tex"],"unit":"mixed; see llm.md"},"training_results":{"directory":"results","unit":"field predictions W/m2; normalized metrics dimensionless; parameter counts stored values"}},
+ "article":{"title":"How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?","status":"manuscript in preparation","authors":["Cyril Voyant","Andreas Kazantzidis","Jan Kleissl"]},
+ "execution_policy":"Read/reconstruct archives first; training has materially larger resource cost",
+ "validation_scope":"Documentation only, not executable validation"
+}

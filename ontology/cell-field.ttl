@@ -1,0 +1,14 @@
+@prefix schema: <https://schema.org/> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix cv: <https://github.com/cyrilvoyant/cell-vs-field-irradiance#> .
+cv:software a schema:SoftwareSourceCode ; schema:name "Cell versus field irradiance benchmark" ;
+ schema:codeRepository <https://github.com/cyrilvoyant/cell-vs-field-irradiance> ;
+ schema:programmingLanguage "MATLAB", "Python", "PowerShell" ;
+ schema:identifier <https://doi.org/10.5281/zenodo.23562557> ;
+ schema:citation cv:manuscript ; cv:input cv:ghi ; cv:output cv:forecast, cv:tables .
+cv:manuscript a schema:CreativeWork ; schema:name "How Much Space Is Enough for Short-Term Satellite Irradiance Forecasting?" ;
+ schema:creativeWorkStatus "Manuscript in preparation" ;
+ schema:author <https://orcid.org/0000-0003-0242-7377>, <https://orcid.org/0009-0005-6612-4991>, <https://orcid.org/0000-0003-4364-0211> .
+cv:ghi a schema:PropertyValue ; schema:name "Hourly global horizontal irradiance" ; schema:unitCode unit:W-PER-M2 .
+cv:forecast a schema:PropertyValue ; schema:name "Direct multi-horizon irradiance prediction" ; schema:unitCode unit:W-PER-M2 .
+cv:tables a schema:CreativeWork ; schema:name "Tables reconstructed from archived model results" ; schema:description "Reconstruction does not retrain forecasting models." .
